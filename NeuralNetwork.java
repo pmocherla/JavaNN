@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class NeuralNetwork {
+    // init useful variables
     ArrayList<Layer> layers;
     String loss;
     SimpleMatrix output;
@@ -24,6 +25,7 @@ public class NeuralNetwork {
         int numLayers = layers.size();
         ArrayList<SimpleMatrix> result = new ArrayList<SimpleMatrix>();
 
+        //forward propagate for sample and for each of the layers in the sample
         for (int i = 0; i < samples; i++){
             output = input.get(i);
             for (int j = 0; j < numLayers; j++) {
@@ -45,11 +47,13 @@ public class NeuralNetwork {
         double err = 0;
         SimpleMatrix backPropErr;
         int numLayers = layers.size();
-
+    
+        //forward propagate and back propagate through each sample for the required num epochs
         for (int i = 0; i < epochs; i++) {
             for (int j = 0; j < samples; j++) {
                 output = xTrain.get(j);
-
+                
+                //forward propagate
                 for (int k = 0; k < numLayers; k++) {
                     //System.out.print("Training input: ");
                     //maths.getDims(output);
@@ -111,14 +115,15 @@ public class NeuralNetwork {
 //            xTrain.add(new SimpleMatrix(xData[j]));
 //            yTrain.add(new SimpleMatrix(yData[j]));
 //        }
-
+        //Load data
         MNISTReader reader = new MNISTReader();
         reader.loadData();
         reader.extractData();
         reader.oneHotLabels();
         ArrayList<SimpleMatrix> xTrain = reader.getImages();
         ArrayList<SimpleMatrix> yTrain = reader.getLabels();
-
+        
+        //Add layers to network 
         NeuralNetwork network = new NeuralNetwork("mse");
         network.addLayer(new FullyConnectedLayer(28*28,256));
         network.addLayer(new ActivationLayer("tanh"));
